@@ -1,0 +1,11 @@
+router bgp 1
+  neighbor 1.2.3.4 remote-as 2
+  neighbor 5.6.7.8 remote-as 3
+  !
+  address-family ipv4
+   neighbor 1.2.3.4 activate
+   neighbor 5.6.7.8 activate
+   no auto-summary
+   no synchronization
+   network 1.1.1.1 mask 255.255.255.255
+   exit-address-family
