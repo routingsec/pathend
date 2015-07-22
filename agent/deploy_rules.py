@@ -65,20 +65,19 @@ def deploy_rule(tn, rule):
 	tn.write(rule + "\n")
 
 def encode_neighbors(neighbors):
-	s = "["
+	s = ")"
 	for n in neighbors:
-		s += str(n) + ","
-	if (s[-1] == ","):
+		s += str(n) + "|"
+	if (s[-1] == "|"):
 		s = s[:-1]
-	s += "]"
+	s += "("
 	return s
 
 def whitelist_prefix(record):
 	rule_id = str(record.certification.as_number) + "-whitelist" #+ str(int(random.random() * 10000))
 	for bgp_router in Configuration.bgp_routers:
 		tn = utils.create_connection(bgp_router)
-		deploy_rule(tn, "as-path access-list orig-as" + rule_id + " permit ^"+ str(record.certification.as_number) +"$")
-		deploy_rule(tn, "ip as-path access-list adj-as" + rule_id + " permit "+ str(record.certification.as_number) + "_" + encode_neighbors(record.links) +"$")
+		deploy_rule(tn, "ip as-path access-list " + rule_id + " permit " + "_[^" + encode_neighbors(record.links) + "]_" + str(record.certification.as_number) + "_")
 		deploy_rule(tn, "route-map Protect_AS" + rule_id + " permit 1")
 		deploy_rule(tn, "match rpki valid")
 		max_address_size_bits = "32"

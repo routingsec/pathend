@@ -152,22 +152,6 @@ def answer_requests(server):
 
 def main():
 	configure.main()
-	get_public_key()
-	SocketServer.TCPServer.allow_reuse_address = True
-	server = SocketServer.TCPServer(("0.0.0.0", Configuration.DiscoPort), SvPDDRequestHandler)
-	ServerThread.add_task(answer_requests, server)
-	time.sleep(5)
-	print "++++ Initiating certification procedure with registrars:", Configuration.Registrars.keys(), "++++"
-	
-	# do the certification procedure
-	for as_number in Configuration.ASes.keys():
-		for network in Configuration.ASes[as_number][0]:
-			request_to_certify(as_number, network, Configuration.ASes[as_number][1])
-	
-	# teardown...
-	server.shutdown()
-	ServerThread.wait_completion()
-	#print "++++ Prefix Ownership Certification Process Complete ++++"
 	deploy_rules.main()
 	deploy_rules.exit()
 	time.sleep(3)
