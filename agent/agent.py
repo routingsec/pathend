@@ -47,34 +47,32 @@ def get_public_key():
 	f.close()
 	
 class SvPDDRequestHandler(SocketServer.BaseRequestHandler):
-    """
-    The RequestHandler class for our server.
-
-    It is instantiated once per connection to the server, and must
-    override the handle() method to implement communication to the
-    client.
-    """
-    def handle(self):
-		"""
-		Generate response for a challenge and send it back.
-		"""
-		# self.request is the TCP socket connected to the client
-		data = self.request.recv(1024)
-		self.data = data.strip()
-		
-		# parse out the challenge
-		challenge_message = pickle.loads(zlib.decompress(self.data))
-
-		if (challenge_message.as_number not in Configuration.ASes.keys()):
-			return
-		if (challenge_message.network not in Configuration.ASes[challenge_message.as_number][0]):
-			return
-
-		# generate the response
-		resp = protocol_messages.response(My_Public_Key, challenge_message.as_number, challenge_message.network, challenge_message.challenge, challenge_message.real_dest)
-		
-		# compress it and send
-		self.request.sendall(pickle.dumps(resp))
+        """
+        The RequestHandler class for our server.
+        It is instantiated once per connection to the server, and must
+        override the handle() method to implement communication to the
+        client.
+        """
+        def handle(self):
+                """
+                Generate response for a challenge and send it back.
+                """
+                # self.request is the TCP socket connected to the client
+                data = self.request.recv(1024)
+                self.data = data.strip()
+        	
+        	# parse out the challenge
+                challenge_message = pickle.loads(zlib.decompress(self.data))
+                if (challenge_message.as_number not in Configuration.ASes.keys()):
+                        return
+                if (challenge_message.network not in Configuration.ASes[challenge_message.as_number][0]):
+                        return
+        
+                # generate the response
+                resp = protocol_messages.response(My_Public_Key, challenge_message.as_number, challenge_message.network, challenge_message.challenge, challenge_message.real_dest)
+                
+                # compress it and send
+                self.request.sendall(pickle.dumps(resp))
 
 def fetch_signature(registrar, params, headers, lock):
 	# get a registrar's signature-share for the certificate
