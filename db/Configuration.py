@@ -18,6 +18,8 @@ PUBLIC_KEY_FILE = 'keys/public.pem'
 
 MIN_SIGNERS = 1
 
+if not os.path.exists("registrars"):
+    os.makedirs("registrars")
 Registrars = {"54.152.171.26": "registrars/registrar1.pem", "52.16.27.195": "registrars/registrar2.pem", "52.74.13.72": "registrars/registrar3.pem"}
 
 PREFIX_DB_FILE = "prefix_ownership.db"
