@@ -33,4 +33,8 @@ PREFIX_DB_FILE = "prefix_ownership.db"
 
 UPDATE_INTERVAL = 60 * 60 # one hour
 
+# Specify the IP addresses of your AS's BGP routers and map them to the administrative password. Seperate each bgp router address and password pair by comma.
+# Example: bgp_routers ={1.1.1.1 : secret_password, 1.1.1.2 : secret_password}
+bgp_routers = {}
+
 DEBUG = True

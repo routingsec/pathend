@@ -75,7 +75,7 @@ def encode_neighbors(neighbors):
 
 def whitelist_prefix(record):
 	rule_id = str(record.certification.as_number) + "-whitelist" #+ str(int(random.random() * 10000))
-	for bgp_router in Configuration.bgp_routers:
+	for bgp_router in Configuration.bgp_routers.keys():
 		tn = utils.create_connection(bgp_router)
 		deploy_rule(tn, "ip as-path access-list " + rule_id + " permit " + "_[^" + encode_neighbors(record.links) + "]_" + str(record.certification.as_number) + "_")
 		deploy_rule(tn, "route-map Protect_AS" + rule_id + " permit 1")
@@ -90,14 +90,14 @@ def whitelist_prefix(record):
 		utils.close_connection(tn)
 		
 def deploy_blacklist_rules():
-	for bgp_router in Configuration.bgp_routers:
+	for bgp_router in Configuration.bgp_routers.keys():
 		tn = utils.create_connection(bgp_router)
 		deploy_rule(tn, "route-map BGP_Allow_Legacy permit 2")
 		deploy_rule(tn, "match rpki not-found")
 		deploy_rule(tn, "exit")
 		utils.close_connection(tn)
 
-	for bgp_router in Configuration.bgp_routers:
+	for bgp_router in Configuration.bgp_routers.keys():
 		tn = utils.create_connection(bgp_router)
 		deploy_rule(tn, "route-map BGP_Filter_Deny_All deny 3")
 		deploy_rule(tn, "exit")	
@@ -105,7 +105,7 @@ def deploy_blacklist_rules():
 
 def setup():
 	my_ip = netifaces.ifaddresses('eth0')[2][0]['addr']
-	for bgp_router in Configuration.bgp_routers:
+	for bgp_router in Configuration.bgp_routers.keys():
 		tn = utils.create_connection(bgp_router)
 		for as_number in Configuration.ASes.keys():
 			deploy_rule(tn, "router bgp " + str(as_number))
