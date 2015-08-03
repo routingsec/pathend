@@ -25,9 +25,9 @@ MIN_SIGNERS = 2
 
 if not os.path.exists("registrars"):
     os.makedirs("registrars")
-Registrars = {"52.4.7.247": "registrars/registrar1.pem", "52.16.69.238": "registrars/registrar2.pem", "52.74.191.121": "registrars/registrar3.pem"}
+Registrars = {"52.3.156.141": "registrars/registrar1.pem", "52.17.242.51": "registrars/registrar2.pem", "52.76.1.206": "registrars/registrar3.pem"}
 
-StorageServer = ["52.4.7.247", "52.16.69.238", "52.74.191.121"]
+StorageServer = ["52.3.156.141", "52.17.242.51", "52.76.1.206"]
 
 PREFIX_DB_FILE = "prefix_ownership.db"
 
