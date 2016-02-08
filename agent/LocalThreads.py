@@ -18,7 +18,7 @@ class Worker(Thread):
         self.tasks = tasks
         self.daemon = True
         self.start()
-    
+
     def run(self):
         while True:
             func, args, kargs = self.tasks.get()
@@ -39,4 +39,3 @@ class ThreadPool:
     def wait_completion(self):
         """Wait for completion of all the tasks in the queue"""
         self.tasks.join()
-
