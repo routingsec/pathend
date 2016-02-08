@@ -1,0 +1,3 @@
+This directory contains the implementation of path-end record repositories. 
+It runs on Linux machines with python 2.7 (default version in Linux).
+You can inspect the code or start your own repository by running python prefix-db.py.
