@@ -151,8 +151,6 @@ def answer_requests(server):
 def main():
 	configure.main()
 	deploy_rules.main()
-	deploy_rules.exit()
-	time.sleep(3)
 if __name__ == "__main__":
     main()
 
