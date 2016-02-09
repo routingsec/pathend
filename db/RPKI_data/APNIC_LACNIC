@@ -1,0 +1,177 @@
+{
+  "name": "APNIC_LACNIC",
+  "date": "2016-01-22T01:31:53.740+01:00",
+  "trustAnchor": {
+    "filename": "apnic-rpki-root-lacnic-origin.cer",
+    "subject": "CN=apnic-rpki-root-lacnic-origin",
+    "serial_nr": "15347331276696180220",
+    "issuer": "CN=apnic-rpki-root-lacnic-origin",
+    "subject_key_identifier": "F52A9CA2FC14773E982A85379E26F1FF06064377",
+    "public_key": "Sun RSA public key, 2048 bits\n  modulus: 25566245619697654895073263796146380766941156478877275368419340789986735492639425643099485685228202381384416109489085699082600271500578939699099429235305830333834376426604085695835313344500979894467569091687986528946452979149104444935239121937763686645531641728738024129817777023404378836057126008846105970259292246082199803454663971080228406470782267964822789288140664718082927938233013817462241749224062154161882802432031288694392208948029217919715017175946620498713294147675920133130777288402099958302395904884406211135258718361997523450816983404451036145533204156842932873635566899102724427439227761015127253611749\n  public exponent: 65537",
+    "isEE": false,
+    "isCA": true,
+    "isRoot": true,
+    "validity_period": "2014-12-29T05:24:47.000Z - 2019-12-28T05:24:47.000Z",
+    "validation_result": {
+      "isValid": true,
+      "error": [],
+      "warning": []
+    },
+    "resources": [
+      "AS262246"
+    ],
+    "manifest": {
+      "filename": "9SqcovwUdz6YKoU3nibx_wYGQ3c.mft",
+      "files": [
+        {
+          "filename": "9SqcovwUdz6YKoU3nibx_wYGQ3c.crl",
+          "hash": "120C1D13A95C265F80A035FD9E463228AA63895F59C671D16086250181A5136F"
+        },
+        {
+          "filename": "lqhe9LjK9dTDWhV_ThJe5JS6-Tk.cer",
+          "hash": "A2A1FB3B5AEA3C007D1E3DDCA76B4C722526726988AF33A6F51E9AE43462C9FD"
+        }
+      ],
+      "validation_result": {
+        "isValid": true,
+        "error": [],
+        "warning": []
+      },
+      "validity_period": "2015-12-21T01:35:52.000Z - 2016-01-28T01:35:52.000Z"
+    },
+    "crl": {
+      "filename": "9SqcovwUdz6YKoU3nibx_wYGQ3c.crl",
+      "validation_result": {
+        "isValid": true,
+        "error": [],
+        "warning": []
+      },
+      "revoked_certificates": [
+        {
+          "serial_nr": "69",
+          "revocation_time": "2015-11-18T05:24:24.000Z"
+        },
+        {
+          "serial_nr": "70",
+          "revocation_time": "2015-11-18T05:44:03.000Z"
+        },
+        {
+          "serial_nr": "71",
+          "revocation_time": "2015-12-21T01:36:02.000Z"
+        }
+      ]
+    },
+    "children": [
+      {
+        "type": "cer",
+        "child": {
+          "filename": "lqhe9LjK9dTDWhV_ThJe5JS6-Tk.cer",
+          "subject": "SERIALNUMBER=96A85EF4B8CAF5D4C35A157F4E125EE494BAF939, CN=A90DC5BE",
+          "serial_nr": "68",
+          "issuer": "CN=apnic-rpki-root-lacnic-origin",
+          "subject_key_identifier": "96A85EF4B8CAF5D4C35A157F4E125EE494BAF939",
+          "public_key": "Sun RSA public key, 2048 bits\n  modulus: 27508445764911119803474960366171872508894708526970261569725333667965068007505413731672408616423997035879766561003626980589570335989372151325524064902160519951197367183042904880067824018443558562307709292491640098343143362391468711479119513222252000602979026146897381571699031248815719807522997224221403401789058138173882903290014658200203687638753637946057180989123440522314325263683144882023967937972606239650473777277226453519053708131883823359115193514172448893467085125965380377233357697342745347780556942136264934997519074080461309765644444958992633259496830425610432929028501869225580919172446279188077123197931\n  public exponent: 65537",
+          "isEE": false,
+          "isCA": true,
+          "isRoot": false,
+          "validity_period": "2015-11-18T04:54:31.000Z - 2016-05-18T04:54:20.000Z",
+          "validation_result": {
+            "isValid": true,
+            "error": [],
+            "warning": []
+          },
+          "resources": [
+            "AS262246"
+          ],
+          "authority_key_identifier": "F52A9CA2FC14773E982A85379E26F1FF06064377",
+          "manifest": {
+            "filename": "lqhe9LjK9dTDWhV_ThJe5JS6-Tk.mft",
+            "files": [
+              {
+                "filename": "lqhe9LjK9dTDWhV_ThJe5JS6-Tk.crl",
+                "hash": "E3889BE0C510A2FDC6FB8CEC7FBE700837E31D5BD7AC6DDC12F70374479A79A7"
+              }
+            ],
+            "validation_result": {
+              "isValid": true,
+              "error": [],
+              "warning": []
+            },
+            "validity_period": "2016-01-21T14:50:33.000Z - 2016-01-23T14:50:33.000Z"
+          },
+          "crl": {
+            "filename": "lqhe9LjK9dTDWhV_ThJe5JS6-Tk.crl",
+            "validation_result": {
+              "isValid": true,
+              "error": [],
+              "warning": []
+            },
+            "revoked_certificates": [
+              {
+                "serial_nr": "4785",
+                "revocation_time": "2016-01-18T02:50:40.000Z"
+              },
+              {
+                "serial_nr": "4786",
+                "revocation_time": "2016-01-18T13:13:30.000Z"
+              },
+              {
+                "serial_nr": "4787",
+                "revocation_time": "2016-01-18T14:50:41.000Z"
+              },
+              {
+                "serial_nr": "4788",
+                "revocation_time": "2016-01-19T01:14:00.000Z"
+              },
+              {
+                "serial_nr": "4789",
+                "revocation_time": "2016-01-19T02:50:44.000Z"
+              },
+              {
+                "serial_nr": "4790",
+                "revocation_time": "2016-01-19T13:14:40.000Z"
+              },
+              {
+                "serial_nr": "4791",
+                "revocation_time": "2016-01-19T14:50:42.000Z"
+              },
+              {
+                "serial_nr": "4792",
+                "revocation_time": "2016-01-20T01:17:16.000Z"
+              },
+              {
+                "serial_nr": "4793",
+                "revocation_time": "2016-01-20T02:50:39.000Z"
+              },
+              {
+                "serial_nr": "4794",
+                "revocation_time": "2016-01-20T13:14:09.000Z"
+              },
+              {
+                "serial_nr": "4795",
+                "revocation_time": "2016-01-20T14:50:42.000Z"
+              },
+              {
+                "serial_nr": "4796",
+                "revocation_time": "2016-01-21T01:14:50.000Z"
+              },
+              {
+                "serial_nr": "4797",
+                "revocation_time": "2016-01-21T02:50:42.000Z"
+              },
+              {
+                "serial_nr": "4798",
+                "revocation_time": "2016-01-21T13:13:43.000Z"
+              },
+              {
+                "serial_nr": "4799",
+                "revocation_time": "2016-01-21T14:50:44.000Z"
+              }
+            ]
+          },
+          "children": []
+        }
+      }
+    ]
+  }
+}
