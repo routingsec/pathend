@@ -1,34 +1,19 @@
-import netaddr
+import utils
+import pickle
+import time
 
-class certification_request:
-	def __init__(self, public_key, as_number, network):
-		self.public_key = public_key
-		self.network = network
-		self.as_number = as_number
+class PathEndRecord(object):
+    def __init__(self, asn, links, transient_flag):
+        self.asn = asn
+        self.links = links
+        self.transient_flag = transient_flag
+        self.timestamp = time.time()
 
-class challenge:
-	def __init__(self, challenge, real_dest, as_number, network):
-		self.challenge = challenge
-		self.real_dest = real_dest
-		self.as_number = as_number
-		self.network = network
-
-class response:				
-	def __init__(self, public_key, as_number, network, challenge, real_src):
-		self.public_key = public_key
-		self.as_number = as_number
-		self.network = network
-		self.challenge = challenge
-		self.real_src = real_src
-
-class signature:
-	def __init__(self, sig):
-		self.sig = sig
-
-class signed_RPKI_cert:																				
-	def __init__(self, certification, signatures, links, signature_for_links):
-		self.certification = certification
-		self.signatures = signatures
-		self.links = links
-		self.signature_for_links = signature_for_links
-		
+class SignedPathEndRecord:
+    def __init__(self, asn, links, transient_flag):
+        self.record = pickle.dumps(PathEndRecord(asn, links, transient_flag))
+        self.signature = utils.sign(self.record)
+    def get(self):
+        return pickle.loads(self.record)
+    def verify_path_end_record(self, pubkey):
+        verify(self.record, self.signature, pubkey)

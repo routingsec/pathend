@@ -8,40 +8,74 @@ are permitted provided that the following conditions are met:
    and/or other materials provided with the distribution.
 """
 
-import os 
+import os
 
 def install():
-	"""
-	Installs all missing packages.
-	"""
-	try:
-		from M2Crypto import X509
-	except:
-		print "Installing missing package M2Crypto for cryptographic functions" 
-		if (os.geteuid() != 0):
-			print "error - must run as root to install package" 
-			raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
-		os.system("apt-get --assume-yes install python-m2crypto")
+    """
+    Installs all missing packages.
+    """
+    try:
+        os.geteuid()
+    except:
+        return
 
-	try:
-		import netifaces
-	except:
-		print "Installing missing package netifaces for reading network routing information (python-netifaces)" 
-		if (os.geteuid() != 0):
-			print "error - must run as root to install package" 
-			raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
-		os.system("apt-get --assume-yes install python-netifaces")
+    try:
+        import interval
+    except:
+        print "Installing missing package interval"
+        if (os.geteuid() != 0):
+            print "error - must run as root to install package"
+            raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
+        os.system("apt-get --assume-yes install python-pip")
+        os.system("pip install interval")
+        
+    try:
+        from M2Crypto import X509
+    except:
+        print "Installing missing package M2Crypto for cryptographic functions"
+        if (os.geteuid() != 0):
+            print "error - must run as root to install package"
+            raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
+        os.system("apt-get --assume-yes install python-m2crypto")
 
-	try:
-		import netaddr
-	except:
-		print "Installing missing package netifaces for reading network routing information (python-netaddr)" 
-		if (os.geteuid() != 0):
-			print "error - must run as root to install package" 
-			raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
-		os.system("apt-get --assume-yes install python-netaddr")
-				
-	return True
+    try:
+        import netifaces
+    except:
+        print "Installing missing package netifaces for reading network routing information (python-netifaces)"
+        if (os.geteuid() != 0):
+            print "error - must run as root to install package"
+            raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
+        os.system("apt-get --assume-yes install python-netifaces")
 
-		
+    try:
+        import netaddr
+    except:
+        print "Installing missing package netifaces for reading network routing information (python-netaddr)"
+        if (os.geteuid() != 0):
+            print "error - must run as root to install package"
+            raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
+        os.system("apt-get --assume-yes install python-netaddr")
+
+    try:
+        import nfqueue
+    except:
+        print "Installing missing package python-nfqueue for intercepting packets"
+        if (os.geteuid() != 0):
+            print "error - must run as root to install package"
+            raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
+        os.system("apt-get --assume-yes install python-nfqueue")
+        os.system("apt-get --assume-yes install build-essential python-dev libnetfilter-queue-dev")
+
+    try:
+        import scapy
+    except:
+        print "Installing missing package scapy handling intercepted packets"
+        if (os.geteuid() != 0):
+            print "error - must run as root to install package"
+            raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
+        os.system("apt-get --assume-yes install python-scapy")
+
+    return True
+
+
 install()

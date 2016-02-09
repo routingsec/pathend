@@ -9,6 +9,9 @@ import utils
 import M2Crypto
 import hashlib
 import zlib
+import RPKI
+import os
+import os.path
 
 HOST_NAME = '0.0.0.0'
 PORT_NUMBER = 8080
@@ -31,11 +34,12 @@ def store_db():
 	pickle.dump(prefix_DB, dbfile)
 
 def store(path_end_record):
-	prefix_DB[path_end_record.certification.network] = path_end_record
+        if (record.asn in prefix_DB) and (record.timestamp <= prefix_DB[record.asn].timestamp):
+                return
+	prefix_DB[record.asn] = record
 	store_db()
 
-
-
+gRPKITree = RPKI.RPKITree()
 class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 	"""
 	Handles the database requests.
@@ -64,27 +68,33 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 	def do_POST(s):
 		"""Respond to a POST request."""
 		try:
+                        print "handling post!"
 			length = int(s.headers.getheader('content-length'))
 			data = s.rfile.read(length)
-			path_end_record = pickle.loads(data)
-			if (utils.verify_certificate(path_end_record)):
-				store(path_end_record)
-				s.send_response(200)
-				s.end_headers()
-				return
+			signed_path_end_record = pickle.loads(data)
+			record = signed_path_end_record.get()
+			authorized_pubkeys = gRPKITree.get_pub_key_set(record.asn)
+			print "validating"
+			for pubkey in authorized_pubkeys:
+                                if (utils.verify(signed_path_end_record.record, signed_path_end_record.signature, pubkey)):
+                                        store(signed_path_end_record)
+                                        s.send_response(200)
+                                        s.end_headers()
+                                        return
+                        print "no valid"
 		except:
-			raise
+			pass
 		s.send_response(500)
 		s.end_headers()
 
 if __name__ == '__main__':
 	server_class = BaseHTTPServer.HTTPServer
 	load_db()
-	utils.setup_keys()
 	httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
 	print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
 	utils.redir_to_null()
 	try:
+                print "now serving!"
 		httpd.serve_forever()
 	except KeyboardInterrupt:
 		store_db()
