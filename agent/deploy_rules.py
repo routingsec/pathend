@@ -8,11 +8,13 @@ import random
 import Configuration
 import protocol_messages
 import utils
+import RPKI
 
 cached_rules = None
 ASKED_TO_STOP = False
-DeployerThread = LocalThreads.ThreadPool(1)
 tab_ctx = 0
+
+gRPKITree = None
 
 def download_from_random_db():
 	db_server = random.choice(Configuration.StorageServer)
@@ -43,8 +45,15 @@ def download_rules(prefix_db):
 	# prefix-ownership authentication procedure completed
 	if (response.status == 200):
 		db = pickle.loads(zlib.decompress(response.read()))
-		for prefix in db.keys():
-			if (not utils.verify_path_end_record(db[prefix])):
+		for asn in db:
+                        record = db[asn].get()
+                        authorized_pubkeys = gRPKITree.get_pub_key_set(asn)
+                        verified = False
+                        for pubkey in authorized_pubkeys:
+                                if (utils.verify(signed_record.record, signed_record.signature, pubkey)):
+                                        verified = True
+                                        break
+                        if not verified:
 				del db[prefix]
 		cached_rules = db
 		store_db()
@@ -73,53 +82,45 @@ def encode_neighbors(neighbors):
 	s += "("
 	return s
 
-def whitelist_prefix(record):
-	rule_id = str(record.certification.as_number) + "-whitelist" #+ str(int(random.random() * 10000))
+gSetupRules = {}
+def deploy_record(raw_record):
+        record = raw_record.get()
+	rule_id = "as" + str(record.asn)
+	record_rule_ids[rule_id] = time.time()
 	for bgp_router in Configuration.bgp_routers.keys():
 		tn = utils.create_connection(bgp_router)
-		deploy_rule(tn, "ip as-path access-list " + rule_id + " permit " + "_[^" + encode_neighbors(record.links) + "]_" + str(record.certification.as_number) + "_")
-		deploy_rule(tn, "route-map Protect_AS" + rule_id + " permit 1")
-		deploy_rule(tn, "match rpki valid")
-		max_address_size_bits = "32"
-		if (not record.certification.network.ipv6):
-			max_address_size_bits = "128"
-		deploy_rule(tn, "match ip address prefix-list " + str(record.certification.network) + " le " + max_address_size_bits)
-		deploy_rule(tn, "match ip as-path orig-as" + rule_id)
-		deploy_rule(tn, "match ip as-path adj-as" + rule_id)
-		deploy_rule(tn, "exit")
-		utils.close_connection(tn)
-		
-def deploy_blacklist_rules():
-	for bgp_router in Configuration.bgp_routers.keys():
-		tn = utils.create_connection(bgp_router)
-		deploy_rule(tn, "route-map BGP_Allow_Legacy permit 2")
-		deploy_rule(tn, "match rpki not-found")
+		deploy_rule(tn, "ip as-path access-list " + rule_id + " deny " + "_[^" + encode_neighbors(record.links) + "]_" + str(record.asn) + "_")
+		if not record.transient_flag:
+                        deploy_rule(tn, "ip as-path access-list " + rule_id + " deny _" + str(record.asn) + "_[0-9]+_")
 		deploy_rule(tn, "exit")
 		utils.close_connection(tn)
 
+def deploy_allow_all_rule():
 	for bgp_router in Configuration.bgp_routers.keys():
 		tn = utils.create_connection(bgp_router)
-		deploy_rule(tn, "route-map BGP_Filter_Deny_All deny 3")
-		deploy_rule(tn, "exit")	
-		utils.close_connection(tn)
+		deploy_rule(tn, tn, "ip as-path access-list allow-all permit")
+        
 
-def setup():
-	my_ip = netifaces.ifaddresses('eth0')[2][0]['addr']
+def update_rules():
+        global gSetupRules        
 	for bgp_router in Configuration.bgp_routers.keys():
 		tn = utils.create_connection(bgp_router)
-		for as_number in Configuration.ASes.keys():
-			deploy_rule(tn, "router bgp " + str(as_number))
-			deploy_rule(tn, "bgp rpki server tcp " + my_ip + " port 32002 refresh " + str(Configuration.UPDATE_INTERVAL))
-			deploy_rule(tn, "exit")
-	deploy_blacklist_rules()
+		deploy_rule(tn, "route-map Path-End-Validation permit 1")
+		for rule_id in gSetupRules:
+                        deploy_rule(tn, "match ip as-path " + rule_id)
+                deploy_rule(tn, "match ip as-path allow-all")
+		deploy_rule(tn, "exit")
+		utils.close_connection(tn)
 
 def deploy_new_rules():
 	global cached_rules
 	for record in cached_rules.keys():
-		whitelist_prefix(cached_rules[record])
+		deploy_record(cached_rules[record])
+	update_rules()
 	
 def backgroud_updates():
 	global cached_rules
+	deploy_allow_all_rule()
 	load_db()
 	for i in xrange(10):
 		try:
@@ -129,22 +130,19 @@ def backgroud_updates():
 		except:
 			pass
 
-	setup()
+	deploy_allow_all_rule()
 	i = 0
 	download_from_random_db()
 	deploy_new_rules()
-	while(not ASKED_TO_STOP):
+	while True:
 		time.sleep(1)
 		i += 1
-		if (i == UPDATE_INTERVAL):
+		if (i == Configuration.UPDATE_INTERVAL):
 			deploy_new_rules()
 			download_from_random_db()
 			i = 0
 
-def exit():
-	global ASKED_TO_STOP
-	ASKED_TO_STOP = True
-	DeployerThread.wait_completion()
-
 def main():
-	DeployerThread.add_task(backgroud_updates)
+        global gRPKITree
+        gRPKITree = RPKI.RPKITree()
+        backgroud_updates()

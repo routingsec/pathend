@@ -23,11 +23,7 @@ PUBLIC_KEY_FILE = 'keys/public.pem'
 
 MIN_SIGNERS = 2
 
-if not os.path.exists("registrars"):
-    os.makedirs("registrars")
-Registrars = {"52.3.156.141": "registrars/registrar1.pem", "52.17.242.51": "registrars/registrar2.pem", "52.76.1.206": "registrars/registrar3.pem"}
-
-StorageServer = ["52.3.156.141", "52.17.242.51", "52.76.1.206"]
+StorageServer = ["52.23.243.4", "52.19.108.4", "54.254.136.249"]
 
 PREFIX_DB_FILE = "prefix_ownership.db"
 

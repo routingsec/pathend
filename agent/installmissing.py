@@ -15,6 +15,21 @@ def install():
     Installs all missing packages.
     """
     try:
+        os.geteuid()
+    except:
+        return
+
+    try:
+        import interval
+    except:
+        print "Installing missing package interval"
+        if (os.geteuid() != 0):
+            print "error - must run as root to install package"
+            raise "you must run as root to install the package, please use \"sudo python PnP-IPsec\" to execute"
+        os.system("apt-get --assume-yes install python-pip")
+        os.system("pip install interval")
+        
+    try:
         from M2Crypto import X509
     except:
         print "Installing missing package M2Crypto for cryptographic functions"
